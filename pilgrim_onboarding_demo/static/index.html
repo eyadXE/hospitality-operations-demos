@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Elaf Group — Pilgrim Onboarding</title>
+<style>
+  :root {
+    --bg: #0d1117; --panel: #161b22; --border: #30363d;
+    --text: #e6edf3; --muted: #8b949e; --accent: #58a6ff;
+    --green: #3fb950; --amber: #d29922; --red: #f85149;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: var(--bg); color: var(--text); font-family: -apple-system, "Segoe UI", Roboto, sans-serif; }
+  header { padding: 20px 32px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 14px; }
+  header .logo { width: 38px; height: 38px; border-radius: 9px; background: linear-gradient(135deg, #1f6feb, #58a6ff); display: grid; place-items: center; font-size: 19px; }
+  header h1 { font-size: 18px; font-weight: 650; }
+  header p { font-size: 13px; color: var(--muted); }
+  header .reset { margin-left: auto; background: none; border: 1px solid var(--border); color: var(--muted); padding: 8px 14px; border-radius: 8px; cursor: pointer; font-size: 13px; }
+  header .reset:hover { border-color: var(--red); color: var(--red); }
+
+  nav { display: flex; gap: 4px; padding: 12px 32px 0; max-width: 1400px; margin: 0 auto; flex-wrap: wrap; }
+  nav button { background: none; border: none; color: var(--muted); font-size: 14px; padding: 10px 16px; cursor: pointer;
+               border-bottom: 2px solid transparent; font-family: inherit; }
+  nav button.active { color: var(--accent); border-bottom-color: var(--accent); }
+  nav button .badge { font-size: 11px; background: var(--panel); border: 1px solid var(--border); border-radius: 10px; padding: 1px 8px; margin-left: 6px; }
+
+  main { max-width: 1400px; margin: 0 auto; padding: 20px 32px 48px; }
+  .tab { display: none; }
+  .tab.active { display: block; }
+
+  .grid { display: grid; grid-template-columns: 400px 1fr; gap: 24px; }
+  @media (max-width: 950px) { .grid { grid-template-columns: 1fr; } }
+  .panel { background: var(--panel); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; height: fit-content; }
+  .panel h2 { font-size: 13px; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); padding: 14px 18px; border-bottom: 1px solid var(--border); }
+  .panel .body { padding: 18px; }
+
+  .samples { display: flex; flex-direction: column; gap: 8px; }
+  .sample-btn { display: flex; align-items: center; gap: 10px; padding: 10px 12px; background: transparent; color: var(--text);
+                border: 1px solid var(--border); border-radius: 8px; cursor: pointer; font-size: 14px; text-align: left; transition: all .15s; width: 100%; }
+  .sample-btn:hover { border-color: var(--accent); background: #1c2128; }
+  .sample-btn.active { border-color: var(--accent); background: #12233b; }
+  .dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+  .dot.ok { background: var(--green); } .dot.warn { background: var(--amber); }
+
+  .dropzone { margin-top: 14px; border: 2px dashed var(--border); border-radius: 10px; padding: 22px 14px; text-align: center;
+              color: var(--muted); font-size: 13px; cursor: pointer; transition: all .15s; display: block; }
+  .dropzone.dragover { border-color: var(--accent); background: #12233b; color: var(--accent); }
+  .dropzone input { display: none; }
+  #preview { max-width: 100%; border-radius: 8px; border: 1px solid var(--border); margin-top: 14px; display: none; }
+
+  table.fields { width: 100%; border-collapse: collapse; font-size: 14px; }
+  .fields td, .fields th { padding: 8px 6px; border-bottom: 1px solid var(--border); text-align: left; }
+  .fields tr:last-child td { border-bottom: none; }
+  .fields th { color: var(--muted); font-weight: 500; font-size: 12px; text-transform: uppercase; letter-spacing: .06em; }
+  .src { font-size: 11px; border: 1px solid var(--border); border-radius: 10px; padding: 1px 8px; color: var(--muted); }
+  .src.manual { color: var(--amber); border-color: var(--amber); }
+  .missing { color: var(--red); }
+  .conf { display: flex; align-items: center; gap: 10px; margin: 12px 0; font-size: 12px; color: var(--muted); }
+  .conf .bar { flex: 1; height: 6px; background: var(--bg); border-radius: 3px; overflow: hidden; }
+  .conf .fill { height: 100%; background: var(--accent); border-radius: 3px; }
+
+  .verdict { display: flex; gap: 10px; padding: 12px; border-radius: 10px; margin-top: 10px; font-size: 14px; line-height: 1.5; }
+  .verdict b { display: block; margin-bottom: 2px; }
+  .verdict.pass { background: rgba(63,185,80,.1); border: 1px solid var(--green); }
+  .verdict.fail { background: rgba(248,81,73,.1); border: 1px solid var(--red); }
+  .verdict.review { background: rgba(210,153,34,.1); border: 1px solid var(--amber); }
+  .verdict .icon { font-size: 16px; }
+
+  .notice { padding: 12px; border-radius: 10px; font-size: 13.5px; line-height: 1.5; margin-top: 10px; }
+  .notice.warn { background: rgba(210,153,34,.1); border: 1px solid var(--amber); }
+  .notice.err { background: rgba(248,81,73,.1); border: 1px solid var(--red); }
+  .notice.ok { background: rgba(63,185,80,.1); border: 1px solid var(--green); }
+
+  .manual-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 10px; margin-top: 10px; }
+  .manual-grid label { font-size: 12px; color: var(--muted); display: block; margin-bottom: 4px; }
+  .manual-grid input { width: 100%; background: var(--bg); border: 1px solid var(--border); color: var(--text);
+                       border-radius: 7px; padding: 8px 10px; font-size: 13px; }
+  .manual-grid input:focus { outline: none; border-color: var(--accent); }
+  .apply-btn { margin-top: 10px; background: #1f6feb; border: none; color: white; padding: 8px 16px; border-radius: 8px; cursor: pointer; font-size: 13px; }
+  .apply-btn:hover { background: #388bfd; }
+
+  details { margin-top: 12px; }
+  summary { cursor: pointer; color: var(--muted); font-size: 13px; }
+  pre { margin-top: 8px; background: var(--bg); border: 1px solid var(--border); border-radius: 8px;
+        padding: 14px; font-size: 12px; white-space: pre-wrap; max-height: 240px; overflow: auto; }
+
+  .empty { color: var(--muted); text-align: center; padding: 70px 20px; font-size: 15px; }
+  #loading { display: none; text-align: center; padding: 50px; color: var(--muted); }
+  .spinner { width: 26px; height: 26px; border: 3px solid var(--border); border-top-color: var(--accent);
+             border-radius: 50%; animation: spin .8s linear infinite; margin: 0 auto 12px; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .footnote { padding: 12px 18px; border-top: 1px solid var(--border); color: var(--muted); font-size: 12px; }
+</style>
+</head>
+<body>
+<header>
+  <div class="logo">🕋</div>
+  <div>
+    <h1>Elaf Group — Pilgrim Onboarding Agent</h1>
+    <p>Local OCR → deterministic rules engine → human review · no document data leaves this machine</p>
+  </div>
+  <button class="reset" onclick="resetAll()">Reset demo</button>
+</header>
+
+<nav id="tabs"></nav>
+
+<main>
+  <div id="tab-panels"></div>
+</main>
+
+<script>
+const DOC_TYPES = [
+  {id:'passport', icon:'📕', title:'Passport', rule:'Rule 1: Passport Validity'},
+  {id:'visa', icon:'🛂', title:'Visa', rule:'Rule 2: Visa Validity & Type Match'},
+  {id:'health', icon:'💉', title:'Health Certificate', rule:'Rule 3: Certificate Validity'},
+  {id:'booking', icon:'🏨', title:'Booking Confirmation', rule:'Provides trip context'},
+  {id:'summary', icon:'🔗', title:'Cross-Document Summary', rule:'Rule 4 + Overall Status'},
+];
+let META = null;
+const SID = Math.random().toString(36).slice(2, 14);
+
+const state = {}; // doc_type -> last process result
+const manualValues = {}; // doc_type -> {field: value}
+
+async function init() {
+  META = await (await fetch('/api/meta')).json();
+  const nav = document.getElementById('tabs');
+  const panels = document.getElementById('tab-panels');
+  DOC_TYPES.forEach(d => {
+    const b = document.createElement('button');
+    b.id = `nav-${d.id}`;
+    b.innerHTML = `${d.icon} ${d.title}${d.id !== 'summary' ? '<span class="badge" data-badge></span>' : ''}`;
+    b.onclick = () => selectTab(d.id);
+    nav.appendChild(b);
+
+    const p = document.createElement('div');
+    p.className = 'tab'; p.id = `tab-${d.id}`;
+    p.innerHTML = d.id === 'summary' ? summaryPanelHTML() : docPanelHTML(d);
+    panels.appendChild(p);
+    if (d.id !== 'summary') wireDocPanel(d.id);
+  });
+  selectTab('passport');
+}
+
+function selectTab(id) {
+  document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById(`nav-${id}`).classList.add('active');
+  document.getElementById(`tab-${id}`).classList.add('active');
+  if (id === 'summary') refreshSummary();
+}
+
+function badge(type) {
+  const el = document.querySelector(`#nav-${type} [data-badge]`);
+  const v = state[type];
+  el.textContent = v && !v.is_screenshot ? '✓' : '';
+}
+
+function docPanelHTML(d) {
+  return `
+  <div class="grid">
+    <div class="panel">
+      <h2>${d.icon} ${d.title}</h2>
+      <div class="body">
+        <div class="samples" id="samples-${d.id}"></div>
+        <label class="dropzone" id="dz-${d.id}">
+          <input type="file" id="fi-${d.id}" accept=".png,.jpg,.jpeg">
+          <div>📥 Drop a ${META.doc_labels[d.id]} image here<br>or click to browse</div>
+        </label>
+        <img id="preview-${d.id}">
+      </div>
+      <div class="footnote">All sample documents are synthetic.</div>
+    </div>
+    <div class="panel">
+      <h2>${d.rule}</h2>
+      <div class="body" id="body-${d.id}">
+        <div class="empty">Choose a sample or upload your own ${META.doc_labels[d.id]} to run extraction and validation.</div>
+        <div id="loading-${d.id}" style="display:none"><div class="spinner"></div>Running local OCR…</div>
+        <div id="results-${d.id}" style="display:none"></div>
+      </div>
+    </div>
+  </div>`;
+}
+
+function wireDocPanel(type) {
+  const box = document.getElementById(`samples-${type}`);
+  META.samples[type].forEach(s => {
+    const btn = document.createElement('button');
+    btn.className = 'sample-btn';
+    btn.innerHTML = `<span class="dot ${s.label.includes('iolat') || s.label.includes('Wrong') || s.label.includes('Issued') || s.label.includes('Expiring') || s.label.includes('mismatch') ? 'warn' : 'ok'}"></span>${s.label}`;
+    btn.onclick = () => {
+      box.querySelectorAll('.sample-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const pv = document.getElementById(`preview-${type}`);
+      pv.src = `/api/sample-image/${s.id}?t=${Date.now()}`; pv.style.display = 'block';
+      processDoc(`/api/process-sample/${type}/${s.id}`, new URLSearchParams({session_id: SID}), type);
+    };
+    box.appendChild(btn);
+  });
+
+  const dz = document.getElementById(`dz-${type}`), fi = document.getElementById(`fi-${type}`);
+  ['dragenter','dragover'].forEach(ev => dz.addEventListener(ev, e => { e.preventDefault(); dz.classList.add('dragover'); }));
+  ['dragleave','drop'].forEach(ev => dz.addEventListener(ev, e => { e.preventDefault(); dz.classList.remove('dragover'); }));
+  dz.addEventListener('drop', e => e.dataTransfer.files[0] && handleFile(type, e.dataTransfer.files[0]));
+  fi.addEventListener('change', () => fi.files[0] && handleFile(type, fi.files[0]));
+}
+
+function handleFile(type, file) {
+  document.querySelectorAll(`#samples-${type} .sample-btn`).forEach(b => b.classList.remove('active'));
+  const pv = document.getElementById(`preview-${type}`);
+  pv.src = URL.createObjectURL(file); pv.style.display = 'block';
+  const fd = new FormData(); fd.append('session_id', SID); fd.append('file', file);
+  processDoc(`/api/process-upload/${type}`, fd, type);
+}
+
+async function processDoc(url, body, type) {
+  const loading = document.getElementById(`loading-${type}`);
+  const results = document.getElementById(`results-${type}`);
+  results.style.display = 'none';
+  loading.style.display = 'block';
+  try {
+    state[type] = await (await fetch(url, {method: 'POST', body})).json();
+    delete manualValues[type];
+    renderResults(type);
+  } catch (e) { alert(e.message); }
+  loading.style.display = 'none';
+  badge(type);
+}
+
+const SRC_LABEL = {label: 'label match', mrz: 'MRZ', fallback: 'fallback'};
+
+function renderResults(type) {
+  const r = state[type];
+  const el = document.getElementById(`results-${type}`);
+  let html = '';
+
+  if (r.is_screenshot) {
+    html += `<div class="notice err">❌ This looks like a screenshot of the app itself, not the document.
+      Please upload a photo/scan of the actual document page.</div>`;
+  } else {
+    html += `<table class="fields"><tr><th>Field</th><th>Extracted Value</th><th>Source</th></tr>` +
+      Object.entries(r.fields).map(([k,v]) =>
+        `<tr><td style="color:var(--muted)">${META.fields[type][k] || k}</td>` +
+        `<td>${v || '<span class="missing">⚠️ not found — enter manually below</span>'}</td>` +
+        `<td>${v ? `<span class="src ${r.sources[k]==='manual'?'manual':''}">${r.sources[k]==='manual' ? '✍️ manual' : SRC_LABEL[r.sources[k]] || '—'}</span>` : '—'}</td></tr>`
+      ).join('') + '</table>';
+
+    const pct = Math.round((r.ocr_confidence || 0) * 100);
+    html += `<div class="conf"><span>OCR confidence</span><div class="bar"><div class="fill" style="width:${pct}%"></div></div><span>${pct}%</span></div>`;
+    html += r.doc_type_ok
+      ? `<div class="notice ok">✅ Document Type Check — this looks like a ${META.doc_labels[type]}.</div>`
+      : `<div class="notice warn">🟠 Document Type Check — couldn't confirm this is actually a ${META.doc_labels[type]}. If a different ID was uploaded by mistake, please upload the correct document.</div>`;
+
+    if (r.missing.length) {
+      html += `<div class="notice warn">⚠️ ${r.missing.length} field(s) couldn't be read automatically — enter them manually; validation uses whatever you enter.</div>`;
+      html += `<div class="manual-grid">` + r.missing.map(k =>
+        `<div><label>${META.fields[type][k] || k}</label><input id="man-${type}-${k}" placeholder="${k.includes('date') ? 'YYYY-MM-DD' : ''}"></div>`
+      ).join('') + `</div><button class="apply-btn" onclick="applyManual('${type}')">Apply &amp; re-validate</button>`;
+    }
+  }
+
+  html += `<details><summary>Raw OCR text</summary><pre>${esc(r.raw_text)}</pre></details>`;
+  el.innerHTML = html;
+
+  if (!r.is_screenshot) loadVerdicts(type);
+}
+
+async function applyManual(type) {
+  const values = {};
+  (state[type].missing || []).forEach(k => {
+    const inp = document.getElementById(`man-${type}-${k}`);
+    if (inp && inp.value.trim()) values[k] = inp.value.trim();
+  });
+  await fetch(`/api/set-manual/${type}`, {method:'POST', headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({session_id: SID, values})});
+  Object.assign(state[type].fields, values);
+  state[type].missing = state[type].missing.filter(k => !values[k]);
+  renderResults(type);
+}
+
+async function loadVerdicts(type) {
+  const res = await (await fetch(`/api/evaluate/${type}?session_id=${SID}`)).json();
+  const el = document.createElement('div');
+  el.innerHTML = res.verdicts.map(v => verdictHTML(v)).join('');
+  document.getElementById(`results-${type}`).appendChild(el);
+}
+
+const ICON = {pass:'✔', fail:'✘', review:'⏸'};
+function verdictHTML(v) {
+  return `<div class="verdict ${v.status}"><span class="icon">${ICON[v.status]}</span><span><b>${v.rule} — ${{pass:'PASS', fail:'VIOLATION', review:'NEEDS HUMAN REVIEW'}[v.status]}</b>${esc(v.message)}</span></div>`;
+}
+
+// ---- Summary tab ----
+function summaryPanelHTML() {
+  return `
+  <div class="panel" style="max-width:900px">
+    <h2>🔗 Cross-Document Summary — Rule 4 + Overall Pilgrim Status</h2>
+    <div class="body" id="summary-body"><div class="empty">Loading…</div></div>
+    <div class="footnote">Process documents in the tabs above; this view updates automatically.</div>
+  </div>`;
+}
+
+async function refreshSummary() {
+  const s = await (await fetch(`/api/summary?session_id=${SID}`)).json();
+  let html = `<p style="color:var(--muted);font-size:14px;margin-bottom:12px">Documents processed:
+    ${s.processed.length ? s.processed.map(p => `<b style="color:var(--text)">${META.doc_labels[p]}</b>`).join(', ') : 'none yet'}</p>`;
+  if (s.identity) html += verdictHTML({rule:'Rule 4 — Cross-Document Identity Consistency', ...s.identity});
+  else html += `<div class="notice warn">Process at least two documents to run the identity cross-check.</div>`;
+  if (s.overall) {
+    html += `<div class="verdict ${s.overall.status}" style="margin-top:18px;font-size:15px"><span class="icon">${ICON[s.overall.status]}</span>
+      <span><b>Overall Pilgrim Status — ${{pass:'READY FOR CHECK-IN', fail:'NOT READY', review:'UNDER REVIEW'}[s.overall.status]}</b>${esc(s.overall.message)}</span></div>`;
+  } else if (s.processed.length >= 2) {
+    html += `<div class="notice warn">Process all four documents to compute the overall status.</div>`;
+  }
+  document.getElementById('summary-body').innerHTML = html;
+}
+
+async function resetAll() {
+  await fetch('/api/reset', {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({session_id: SID})});
+  location.reload();
+}
+
+function esc(s) { const d = document.createElement('div'); d.textContent = s ?? ''; return d.innerHTML; }
+init();
+</script>
+</body>
+</html>

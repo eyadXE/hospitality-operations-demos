@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Elaf Group — Invoice Processing</title>
+<style>
+  :root {
+    --bg: #0d1117; --panel: #161b22; --border: #30363d;
+    --text: #e6edf3; --muted: #8b949e; --accent: #58a6ff;
+    --green: #3fb950; --amber: #d29922; --red: #f85149;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: var(--bg); color: var(--text); font-family: -apple-system, "Segoe UI", Roboto, sans-serif; min-height: 100vh; }
+  header { padding: 20px 32px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 14px; }
+  header .logo { width: 38px; height: 38px; border-radius: 9px; background: linear-gradient(135deg, #1f6feb, #58a6ff); display: grid; place-items: center; font-size: 19px; }
+  header h1 { font-size: 18px; font-weight: 650; }
+  header p { font-size: 13px; color: var(--muted); }
+  .wrap { display: grid; grid-template-columns: 380px 1fr; gap: 24px; padding: 24px 32px; max-width: 1400px; margin: 0 auto; }
+  @media (max-width: 900px) { .wrap { grid-template-columns: 1fr; } }
+  .panel { background: var(--panel); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; height: fit-content; }
+  .panel h2 { font-size: 13px; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); padding: 14px 18px; border-bottom: 1px solid var(--border); }
+  .panel .body { padding: 18px; }
+
+  .samples { display: flex; flex-direction: column; gap: 8px; }
+  .sample-btn { display: flex; align-items: center; gap: 10px; padding: 10px 12px; background: transparent; color: var(--text);
+                border: 1px solid var(--border); border-radius: 8px; cursor: pointer; font-size: 14px; text-align: left; transition: all .15s; }
+  .sample-btn:hover { border-color: var(--accent); background: #1c2128; }
+  .sample-btn.active { border-color: var(--accent); background: #12233b; }
+  .dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+  .dot.ok { background: var(--green); } .dot.warn { background: var(--amber); }
+
+  .dropzone { margin-top: 16px; border: 2px dashed var(--border); border-radius: 10px; padding: 26px 14px; text-align: center;
+              color: var(--muted); font-size: 13px; cursor: pointer; transition: all .15s; }
+  .dropzone.dragover { border-color: var(--accent); background: #12233b; color: var(--accent); }
+  .dropzone input { display: none; }
+
+  #preview-wrap { margin-top: 16px; }
+  #preview { max-width: 100%; border-radius: 8px; border: 1px solid var(--border); }
+
+  #decision { border-radius: 12px; padding: 18px 22px; margin-bottom: 20px; font-size: 17px; font-weight: 650;
+              display: flex; align-items: center; gap: 12px; }
+  #decision.approve { background: rgba(63,185,80,.12); border: 1px solid var(--green); color: var(--green); }
+  #decision.review { background: rgba(210,153,34,.12); border: 1px solid var(--amber); color: var(--amber); }
+
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  @media (max-width: 1100px) { .grid2 { grid-template-columns: 1fr; } }
+  table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  td, th { padding: 8px 6px; border-bottom: 1px solid var(--border); text-align: left; }
+  td.num { text-align: right; font-variant-numeric: tabular-nums; }
+  tr:last-child td { border-bottom: none; }
+  th { color: var(--muted); font-weight: 500; font-size: 12px; text-transform: uppercase; letter-spacing: .06em; }
+  .missing { color: var(--red); }
+  .check { display: flex; gap: 10px; padding: 10px 0; border-bottom: 1px solid var(--border); font-size: 14px; line-height: 1.45; }
+  .check:last-child { border-bottom: none; }
+  .check .icon { flex-shrink: 0; width: 20px; text-align: center; }
+  .check.pass .icon { color: var(--green); } .check.fail .icon { color: var(--red); }
+
+  details { margin-top: 14px; }
+  summary { cursor: pointer; color: var(--muted); font-size: 13px; }
+  pre { margin-top: 8px; background: var(--bg); border: 1px solid var(--border); border-radius: 8px;
+        padding: 14px; font-size: 12px; white-space: pre-wrap; max-height: 260px; overflow: auto; }
+
+  .conf { display: flex; align-items: center; gap: 10px; margin-top: 14px; font-size: 12px; color: var(--muted); }
+  .conf .bar { flex: 1; height: 6px; background: var(--bg); border-radius: 3px; overflow: hidden; }
+  .conf .fill { height: 100%; background: var(--accent); border-radius: 3px; }
+
+  #empty { color: var(--muted); text-align: center; padding: 90px 20px; font-size: 15px; }
+  #loading { display: none; text-align: center; padding: 60px; color: var(--muted); }
+  .spinner { width: 28px; height: 28px; border: 3px solid var(--border); border-top-color: var(--accent);
+             border-radius: 50%; animation: spin .8s linear infinite; margin: 0 auto 12px; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .footnote { padding: 12px 18px; border-top: 1px solid var(--border); color: var(--muted); font-size: 12px; }
+</style>
+</head>
+<body>
+<header>
+  <div class="logo">🧾</div>
+  <div>
+    <h1>Elaf Group — Invoice Processing Agent</h1>
+    <p>Local OCR → entity extraction → deterministic sanity checks · no data leaves this machine</p>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="panel">
+    <h2>Invoice Source</h2>
+    <div class="body">
+      <div class="samples" id="samples"></div>
+      <label class="dropzone" id="dropzone">
+        <input type="file" id="file-input" accept=".png,.jpg,.jpeg">
+        <div>📥 Drop an invoice image here<br>or click to browse (PNG / JPG)</div>
+      </label>
+      <div id="preview-wrap"><img id="preview" style="display:none"></div>
+    </div>
+    <div class="footnote">All sample invoices are synthetic. OCR runs locally via Tesseract.</div>
+  </div>
+
+  <div class="panel">
+    <h2>Extraction Result</h2>
+    <div class="body" id="result-body">
+      <div id="empty">Select a sample invoice or upload your own to run extraction.</div>
+      <div id="loading"><div class="spinner"></div>Running OCR and sanity checks…</div>
+      <div id="results" style="display:none">
+        <div id="decision"></div>
+        <div class="grid2">
+          <div>
+            <table id="header-table"></table>
+            <h2 style="padding:16px 0 8px;border:none">Sanity Checks</h2>
+            <div id="checks"></div>
+            <div class="conf"><span>OCR confidence</span><div class="bar"><div class="fill" id="conf-fill"></div></div><span id="conf-pct"></span></div>
+            <details><summary>Raw OCR text</summary><pre id="raw"></pre></details>
+          </div>
+          <div>
+            <table id="totals-table"></table>
+            <h2 style="padding:16px 0 8px;border:none">Line Items</h2>
+            <table id="items-table"></table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const fmt = n => n == null ? '<span class="missing">not found</span>' : Number(n).toLocaleString(undefined, {minimumFractionDigits: 2});
+let activeSample = null;
+
+async function loadSamples() {
+  const res = await fetch('/api/samples');
+  const samples = await res.json();
+  const box = document.getElementById('samples');
+  samples.forEach(s => {
+    const btn = document.createElement('button');
+    btn.className = 'sample-btn';
+    btn.innerHTML = `<span class="dot ${s.id.startsWith('valid') ? 'ok' : 'warn'}"></span>${s.label}`;
+    btn.onclick = () => runSample(s.id, btn);
+    box.appendChild(btn);
+  });
+}
+
+async function runSample(id, btn) {
+  document.querySelectorAll('.sample-btn').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  activeSample = id;
+  document.getElementById('preview').src = `/api/sample-image/${id}?t=${Date.now()}`;
+  document.getElementById('preview').style.display = 'block';
+  await extract(`/api/extract-sample/${id}`);
+}
+
+async function extract(url) {
+  showLoading(true);
+  try {
+    const res = await fetch(url, {method: 'POST'});
+    if (!res.ok) throw new Error((await res.json()).detail || 'Extraction failed');
+    render(await res.json());
+  } catch (e) { alert(e.message); }
+  showLoading(false);
+}
+
+function showLoading(on) {
+  document.getElementById('empty').style.display = 'none';
+  document.getElementById('results').style.display = on ? 'none' : 'block';
+  document.getElementById('loading').style.display = on ? 'block' : 'none';
+}
+
+function render(r) {
+  const d = document.getElementById('decision');
+  d.className = r.decision;
+  d.innerHTML = r.decision === 'approve'
+    ? '✅ AUTO-APPROVE — all checks passed, ready to post.'
+    : '🟠 ROUTE TO HUMAN REVIEW — one or more checks failed.';
+  d.style.display = 'flex';
+
+  const labels = {invoice_no:'Invoice No.', vendor:'Vendor', property:'Property', po_number:'PO Number', invoice_date:'Invoice Date', due_date:'Due Date'};
+  document.getElementById('header-table').innerHTML =
+    Object.entries(r.header).map(([k,v]) =>
+      `<tr><td style="color:var(--muted)">${labels[k]||k}</td><td>${v || '<span class="missing">⚠️ not found</span>'}</td></tr>`).join('');
+
+  const c = r.checks;
+  const checks = [];
+  if ('subtotal_matches_line_items' in c) checks.push([c.subtotal_matches_line_items,
+      'Line items add up to the printed subtotal.', 'Line items do NOT add up to the printed subtotal — flag for review.']);
+  if ('total_matches_subtotal_plus_tax' in c) checks.push([c.total_matches_subtotal_plus_tax,
+      'Total due matches subtotal + tax.', 'Total due does NOT match subtotal + tax — flag before payment.']);
+  checks.push([c.has_po_number,
+      'PO number present — can run a 3-way match against the purchase order.',
+      'No PO number found — cannot 3-way match. Route to a human to confirm against a PO manually.']);
+  document.getElementById('checks').innerHTML = checks.map(([ok,p,f]) =>
+    `<div class="check ${ok?'pass':'fail'}"><span class="icon">${ok?'✔':'✘'}</span><span>${ok?p:f}</span></div>`).join('');
+
+  const t = r.totals;
+  document.getElementById('totals-table').innerHTML = `
+    <tr><th colspan="2">Totals</th></tr>
+    <tr><td style="color:var(--muted)">Subtotal (printed)</td><td class="num">${fmt(t.subtotal)}</td></tr>
+    <tr><td style="color:var(--muted)">Tax</td><td class="num">${fmt(t.tax)}</td></tr>
+    <tr><td style="color:var(--muted)">Total due (printed)</td><td class="num">${fmt(t.total)}</td></tr>
+    <tr><td style="color:var(--muted)">Subtotal (computed)</td><td class="num">${r.computed_subtotal==null?'n/a':fmt(r.computed_subtotal)}</td></tr>`;
+
+  const items = r.line_items;
+  document.getElementById('items-table').innerHTML = items.length
+    ? `<tr><th>Description</th><th>Qty</th><th>Unit&nbsp;Price</th><th>Line&nbsp;Total</th></tr>` +
+      items.map(i => `<tr><td>${i.description}</td><td class="num">${i.qty}</td><td class="num">${fmt(i.unit_price)}</td><td class="num">${fmt(i.line_total)}</td></tr>`).join('')
+    : `<tr><td class="missing">No line items detected — document may be unclear or in an unrecognized layout.</td></tr>`;
+
+  const pct = Math.round((r.ocr_confidence || 0) * 100);
+  document.getElementById('conf-fill').style.width = pct + '%';
+  document.getElementById('conf-pct').textContent = pct + '%';
+  document.getElementById('raw').textContent = r.raw_text;
+
+  document.getElementById('results').style.display = 'block';
+}
+
+// Upload handling
+const dz = document.getElementById('dropzone'), fi = document.getElementById('file-input');
+['dragenter','dragover'].forEach(ev => dz.addEventListener(ev, e => { e.preventDefault(); dz.classList.add('dragover'); }));
+['dragleave','drop'].forEach(ev => dz.addEventListener(ev, e => { e.preventDefault(); dz.classList.remove('dragover'); }));
+dz.addEventListener('drop', e => { if (e.dataTransfer.files[0]) handleFile(e.dataTransfer.files[0]); });
+fi.addEventListener('change', () => { if (fi.files[0]) handleFile(fi.files[0]); });
+
+function handleFile(file) {
+  document.querySelectorAll('.sample-btn').forEach(b => b.classList.remove('active'));
+  activeSample = null;
+  const url = URL.createObjectURL(file);
+  const pv = document.getElementById('preview');
+  pv.src = url; pv.style.display = 'block';
+  const fd = new FormData(); fd.append('file', file);
+  extractUpload(fd);
+}
+async function extractUpload(fd) { await extract('/api/extract-upload', {method:'POST', body:fd}); }
+function extract(url, opts) {
+  showLoading(true);
+  const p = opts && opts.body ? fetch(url, {method:'POST', body:opts.body}) : fetch(url, {method:'POST'});
+  return p.then(async res => {
+    if (!res.ok) throw new Error((await res.json()).detail || 'Extraction failed');
+    render(await res.json());
+  }).catch(e => alert(e.message)).finally(() => showLoading(false));
+}
+
+loadSamples();
+</script>
+</body>
+</html>
