@@ -1,4 +1,4 @@
-Elaf Group — Exology Pioneer Program
+Hospitality Group — Exology Pioneer Program
 Pilgrim Onboarding Agent
 OCR → Rule-Based Validation → Human Review — System Design
 Goal: the pilgrim uploads their documents before arrival. The system extracts and checks everything a receptionist would normally check by hand. If everything is valid, the only thing left at the hotel is a quick confirmation with the receptionist at check-in — not a paperwork review. If something is wrong, the pilgrim is told exactly what and why, before they ever travel.
@@ -81,11 +81,11 @@ Low OCR confidence: If any required field couldn't be extracted with high confid
 Genuinely ambiguous case: e.g. a legitimate name spelling variation across documents (common with transliteration from Arabic) — flagged for a human rather than auto-failing on Rule 4, since this is a known false-positive risk worth designing for explicitly.
 Re-upload loop: If a pilgrim fixes and re-uploads, the corrected document re-enters the same pipeline from Document Classification — no special-casing needed.
 8. Data & Ownership
-Data needed: the four document types above, plus the buffer/threshold values (passport validity buffer, health cert issue window, OCR confidence threshold) — these should be configurable, not hardcoded, since Elaf may want to tune them.
+Data needed: the four document types above, plus the buffer/threshold values (passport validity buffer, health cert issue window, OCR confidence threshold) — these should be configurable, not hardcoded, since operator may want to tune them.
 Who owns it: Hajj & Umrah Services owns the day-to-day process and the human review queue; someone senior needs to own the specific threshold values (e.g. how many days before travel a health cert becomes invalid) since that's a policy decision, not a technical one.
 Privacy note: raw document images/PII should not be sent to any third-party AI service beyond what's needed for OCR extraction, and ideally an OCR provider with a clear data-retention policy (or a self-hosted OCR model) is used given the sensitivity of passport/visa/health data.
 9. Open Questions for the Engineering Kickoff
 Which OCR/document-AI stack are we standardizing on for the demo — cloud API or local/self-hosted model?
-What buffer values do we default to for Rule 1 (passport) and Rule 3 (health cert) in the demo, given we don't have Elaf's actual policy thresholds yet?
+What buffer values do we default to for Rule 1 (passport) and Rule 3 (health cert) in the demo, given we don't have operator's actual policy thresholds yet?
 How do we simulate the human review queue in the demo — a simple flagged-item list is probably enough to make the point.
 Do we build the document classifier as a separate step, or fold classification into the extraction prompt itself for the demo (faster to build, less clean architecturally)?

@@ -71,7 +71,7 @@ FIELD_DISPLAY = {
                 "trip_start": "Trip Start", "trip_end": "Trip End", "hotel": "Hotel"},
 }
 
-app = FastAPI(title="Elaf Group — Pilgrim Onboarding Agent")
+app = FastAPI(title="Hospitality Group — Pilgrim Onboarding Agent")
 app.mount("/static", StaticFiles(directory=os.path.join(os.path.dirname(__file__), "static")), name="static")
 
 # session_id -> {"docs": {type: fields}, "ocr_cache": {(type, hash): (text, conf)}}

@@ -29,7 +29,7 @@ SAMPLES = {
     },
 }
 
-app = FastAPI(title="Elaf Group — Invoice Extraction Agent")
+app = FastAPI(title="Hospitality Group — Invoice Extraction Agent")
 app.mount("/static", StaticFiles(directory=os.path.join(os.path.dirname(__file__), "static")), name="static")
 
 

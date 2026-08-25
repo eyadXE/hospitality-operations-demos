@@ -1,6 +1,6 @@
 """
 Generates synthetic (fake) vendor invoice images for the OCR + extraction demo.
-None of this is real Elaf data — created purely to simulate what real vendor
+None of this is real hotel-group data — created purely to simulate what real vendor
 invoices look like (header fields + a line-item table), so OCR + entity
 extraction can be demoed end to end without any real invoice data.
 """
@@ -87,7 +87,7 @@ make_invoice(
     [
         ("Invoice No", "INV-2026-04417"),
         ("Vendor", "Makkah Linen & Textiles Co."),
-        ("Property", "Elaf Kinda - Makkah"),
+        ("Property", "Al Kinda - Makkah"),
         ("PO Number", "PO-88213"),
         ("Invoice Date", "2026-09-10"),
         ("Due Date", "2026-10-10"),
@@ -159,7 +159,7 @@ make_invoice(
     [
         ("Invoice No", "INV-2026-04620"),
         ("Vendor", "Madinah General Supplies"),
-        ("Property", "Elaf Taiba - Madinah"),
+        ("Property", "Al Taiba - Madinah"),
         ("PO Number", "N/A"),
         ("Invoice Date", "2026-09-20"),
         ("Due Date", "2026-10-20"),

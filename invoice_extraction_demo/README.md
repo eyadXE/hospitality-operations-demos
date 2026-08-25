@@ -1,10 +1,10 @@
-# Elaf Group — Invoice Extraction Agent
+# Hospitality Group — Invoice Extraction Agent
 
 OCR → Entity Extraction → Deterministic Sanity Checks, demoed with synthetic vendor invoices.
 
 ## The problem it solves
 
-Elaf's 9 properties each process vendor invoices by hand: someone re-checks arithmetic, confirms a purchase order exists, and keys the data in. This demo shows the slice that matters — a machine reads the invoice locally and plain code decides, in seconds, whether it can be auto-approved or needs human review *and why*.
+operator's 9 properties each process vendor invoices by hand: someone re-checks arithmetic, confirms a purchase order exists, and keys the data in. This demo shows the slice that matters — a machine reads the invoice locally and plain code decides, in seconds, whether it can be auto-approved or needs human review *and why*.
 
 ## How the decision works
 
@@ -31,8 +31,8 @@ Pick one of the four sample invoices (two deliberately broken) or upload your ow
 Docker:
 
 ```bash
-docker build -t elaf-invoice .
-docker run -p 8000:8000 elaf-invoice
+docker build -t hospitality-invoice .
+docker run -p 8000:8000 hospitality-invoice
 ```
 
 ## Files

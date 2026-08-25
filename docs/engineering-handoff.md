@@ -1,4 +1,4 @@
-Elaf Group — Exology Pioneer Program
+Hospitality Group — Exology Pioneer Program
 Engineering Handoff Document
 How We Solved 3 Pain Points: Invoice Extraction, Pilgrim Onboarding, Seasonal Demand Response
 This document is the detailed technical handoff for the three pain points assigned to us. Each section covers the full workflow, the architecture, every rule/check the system runs, the diagrams for how it fits together, and what was actually built and tested (not just designed). Written for engineering onboarding — enough detail to pick up the code and continue.
@@ -287,7 +287,7 @@ Procurement plan: Finance & Procurement owns all phases; property-level Ops owns
 Demand tiers: Joint Ops + Procurement decision, reviewed once per Hijri year as the calendar shifts.
 3.8 What This Deliberately Excludes
 No occupancy/demand forecasting model — fixed playbook keyed to the Hijri calendar and demand tiers.
-No specific headcount/order-volume numbers — depend on each property's real historical patterns and current-year Hajj/Umrah quota allocations, which Elaf holds and we don't have access to.
+No specific headcount/order-volume numbers — depend on each property's real historical patterns and current-year Hajj/Umrah quota allocations, which the operator holds and we don't have access to.
 No automated triggering — every phase is human-initiated on a calendar-driven schedule.
 
 Part 4 — Cross-Cutting Engineering Notes
@@ -304,7 +304,7 @@ Pain Point
  | 
 Invoice Extraction
  | OCR + entity extraction + 3 sanity checks, verified against 4 synthetic invoices incl. 2 broken cases
- | Real 3-way match against actual PO/goods-received data (needs Elaf's procurement system access); layout-aware extraction for non-templated real invoices
+ | Real 3-way match against actual PO/goods-received data (needs operator's procurement system access); layout-aware extraction for non-templated real invoices
  | 
 Pilgrim Onboarding
  | OCR + MRZ extraction + 5 rules, verified against 8 synthetic docs + 1 real-world passport image
@@ -312,10 +312,10 @@ Pilgrim Onboarding
  | 
 Seasonal Demand Plan
  | N/A — this is a process document, not code
- | Everything — this phase is entirely a proposed operational playbook pending Elaf's confirmation of actual quota/booking data access
+ | Everything — this phase is entirely a proposed operational playbook pending operator's confirmation of actual quota/booking data access
  | 
 4.4 Open Questions for the Team
 Which OCR/document-AI stack do we standardize on if we move past Tesseract for production accuracy (cloud API vs. a larger self-hosted model)?
-For invoices: is there a way to get sample real (anonymized) invoice layouts from Elaf's actual vendors, to stress-test extraction against real-world layout diversity before the meeting?
+For invoices: is there a way to get sample real (anonymized) invoice layouts from operator's actual vendors, to stress-test extraction against real-world layout diversity before the meeting?
 For onboarding: do we build the document classifier now, or keep manual doc-type selection for the demo and flag it as a fast-follow?
-For the seasonal plan: can we get confirmation on whether Joudyan properties (Riyadh/Jeddah) really follow a different seasonality than the Hajj/Ramadan-driven Elaf Hotels portfolio, or if that's an assumption we need Elaf to validate?
+For the seasonal plan: can we get confirmation on whether Joudyan properties (Riyadh/Jeddah) really follow a different seasonality than the Hajj/Ramadan-driven Makkah-Madinah property portfolio, or if that's an assumption we need the operator to validate?

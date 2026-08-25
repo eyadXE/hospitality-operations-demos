@@ -1,4 +1,4 @@
-# Elaf Group — Pilgrim Onboarding Agent
+# Hospitality Group — Pilgrim Onboarding Agent
 
 OCR → Rule-Based Validation → Human Review, demoed with synthetic pilgrim documents.
 
@@ -37,8 +37,8 @@ Workflow to demo: process a **Booking Confirmation** first (sets trip dates/pack
 Docker:
 
 ```bash
-docker build -t elaf-onboarding .
-docker run -p 8000:8000 elaf-onboarding
+docker build -t hospitality-onboarding .
+docker run -p 8000:8000 hospitality-onboarding
 ```
 
 ## Files

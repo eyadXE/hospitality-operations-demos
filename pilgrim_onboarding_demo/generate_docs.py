@@ -133,7 +133,7 @@ make_doc(
         ("Package Type", "HAJJ"),
         ("Trip Start", "2026-12-01"),
         ("Trip End", "2026-12-25"),
-        ("Hotel", "Elaf Kinda - Makkah"),
+        ("Hotel", "Al Kinda - Makkah"),
     ],
     accent=(31, 56, 100),
 )

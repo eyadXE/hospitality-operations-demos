@@ -1,10 +1,10 @@
-# Elaf Group — Operations AI Demos
+# Hospitality Group — Operations AI Demos
 
-Two working proof-of-concept demos plus an operational playbook, built for **Elaf Group** (Saudi hospitality operator, 9 properties) during the **Exology Pioneer Program client challenge**. Full engineering handoff: [`docs/engineering-handoff.md`](docs/engineering-handoff.md).
+Two working proof-of-concept demos plus an operational playbook, built as an operations-AI proof of concept during the Exology Pioneer Program. Full engineering handoff: [`docs/engineering-handoff.md`](docs/engineering-handoff.md).
 
 ## 1 · The business problems
 
-Studying how Elaf actually operates surfaced three costly pain points:
+Studying how a large hospitality operator actually operates surfaced three costly pain points:
 
 - **Invoices are processed by hand — nine times over.** Each property processes its own vendor invoices manually, with no central visibility. Every invoice requires someone to check the arithmetic, confirm a purchase order exists, and key the data in — slow, error-prone, and impossible to consolidate for reporting.
 - **Pilgrim onboarding drowns in paperwork at the worst possible moment.** Passports, visas, health certificates and booking confirmations are checked *manually at the front desk* — exactly when the hotel is busiest during Hajj season. A document problem discovered at check-in means a distressed guest and an unfixable booking.
@@ -53,8 +53,8 @@ cd pilgrim_onboarding_demo && pip install -r requirements.txt && uvicorn server:
 Docker (Tesseract included in the image):
 
 ```bash
-cd invoice_extraction_demo && docker build -t elaf-invoice . && docker run -p 8000:8000 elaf-invoice
-cd pilgrim_onboarding_demo && docker build -t elaf-onboarding . && docker run -p 8000:8000 elaf-onboarding
+cd invoice_extraction_demo && docker build -t hospitality-invoice . && docker run -p 8000:8000 hospitality-invoice
+cd pilgrim_onboarding_demo && docker build -t hospitality-onboarding . && docker run -p 8000:8000 hospitality-onboarding
 ```
 
 No API keys needed — fully self-contained and offline-safe by design. Deployable as-is to Railway / Render / Fly.io (respects `$PORT`).

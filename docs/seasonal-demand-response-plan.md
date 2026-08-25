@@ -1,13 +1,13 @@
-Elaf Group — Exology Pioneer Program
+Hospitality Group — Exology Pioneer Program
 Seasonal Demand Response Plan
 Structured Staffing & Procurement Plan for Hajj/Umrah Peak Periods (No Forecasting Model — Operational Plan Only)
-This document sets out how Elaf's hotels should structure their response to Hajj/Umrah seasonal demand — as a fixed operational playbook, not a forecasting system. It's grounded in how hotels in Makkah/Madinah and the wider hospitality industry actually handle this today, based on public reporting and industry practice.
+This document sets out how operator's hotels should structure their response to Hajj/Umrah seasonal demand — as a fixed operational playbook, not a forecasting system. It's grounded in how hotels in Makkah/Madinah and the wider hospitality industry actually handle this today, based on public reporting and industry practice.
 1. Why This Isn't a Normal Seasonal Pattern
 Two things make Hajj/Umrah demand structurally different from ordinary hotel seasonality, and both need to be designed around explicitly rather than assumed away:
 It's lunar, not fixed: The Hijri calendar is about 11 days shorter than the Gregorian year, so Hajj shifts roughly 11 days earlier each Western-calendar year. Hajj 2026 falls in late May; Hajj 2027 is expected around May 14-19. Over a ~33-year cycle, Hajj passes through every Gregorian season. A staffing/procurement plan tied to fixed calendar months ("always staff up in June") will silently go stale year over year — the plan has to key off the Hijri date, not a Gregorian month.
 It's not one peak, it's several overlapping ones: Ramadan (Umrah surge) and Hajj are the two dominant compression periods, but Makkah/Madinah hotels increasingly see extended strong demand into surrounding quarters too, driven by broader Umrah growth. So the plan needs a primary/major peak tier (Hajj, Ramadan) and a secondary/moderate tier (shoulder periods, non-Hajj Umrah flow), not a single on/off peak switch.
 2. Staffing Response Plan
-The core mechanism already exists at the country level: Saudi Arabia's Ministry of Human Resources runs the Ajeer platform specifically to let hospitality businesses bring on legally registered temporary/seasonal workers for Hajj and Ramadan periods. The plan below is about how Elaf uses that mechanism in a structured way, not building a parallel system.
+The core mechanism already exists at the country level: Saudi Arabia's Ministry of Human Resources runs the Ajeer platform specifically to let hospitality businesses bring on legally registered temporary/seasonal workers for Hajj and Ramadan periods. The plan below is about how the operator uses that mechanism in a structured way, not building a parallel system.
 Phase
  | Timing (relative to peak)
  | What Happens
@@ -84,12 +84,12 @@ Tier 3 — Baseline
  | Remaining weeks of the year, including the broader year-round Umrah flow that Makkah/Madinah increasingly see outside the two anchor periods
  | Core staffing only; standard reorder points; normal decentralized-or-centralized procurement per property's usual model.
  | 
-Which property falls into which tier can differ — Makkah and Madinah properties (Elaf Hotels portfolio) are driven directly by the Hajj/Ramadan calendar; Joudyan properties in Riyadh/Jeddah/other cities may have a different, more conventional seasonality (national holidays, weather-driven leisure demand) layered on top, and should be tiered separately rather than assumed to follow the same calendar.
+Which property falls into which tier can differ — Makkah and Madinah properties (Makkah-Madinah property portfolio) are driven directly by the Hajj/Ramadan calendar; Joudyan properties in Riyadh/Jeddah/other cities may have a different, more conventional seasonality (national holidays, weather-driven leisure demand) layered on top, and should be tiered separately rather than assumed to follow the same calendar.
 5. Who Owns What
 Staffing plan (Section 2): Hotel Operations owns Phases 1, 3, 4, 5 and 6; HR/People function owns Phase 2 (Ajeer registration, vendor/staffing-partner agreements, health & insurance compliance).
 Procurement plan (Section 3): Finance & Procurement owns all phases; Hotel Operations at each property owns the local reorder triggers and vendor relationship day-to-day.
 Demand tiers (Section 4): A joint Ops + Procurement decision, reviewed once per Hijri year as the calendar shifts — this is the one place a lightweight, deliberate calendar recalculation is needed even without a forecasting model.
 6. What This Plan Deliberately Does Not Include
 No occupancy or demand forecasting model — this is a fixed operational playbook keyed to the Hijri calendar and demand tiers, not a predictive system.
-No specific headcount or order-volume numbers — those depend on each property's real historical patterns and current-year Hajj/Umrah quota allocations, which Elaf holds and this document doesn't have access to.
+No specific headcount or order-volume numbers — those depend on each property's real historical patterns and current-year Hajj/Umrah quota allocations, which the operator holds and this document doesn't have access to.
 No automated triggering — every phase above is a human-initiated action on a calendar-driven schedule, consistent with the broader design principle that AI/automation supports the team's decisions here rather than acting on its own.
