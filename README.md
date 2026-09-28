@@ -1,6 +1,11 @@
 # Hospitality Group — Operations AI Demos
 
-Two working proof-of-concept demos plus an operational playbook, built as an operations-AI proof of concept during the Exology Pioneer Program. Full engineering handoff: [`docs/engineering-handoff.md`](docs/engineering-handoff.md).
+Two production-shaped FastAPI services that automate manual document-review work for
+a hospitality operator: invoice checking and pilgrim (Hajj/Umrah) onboarding
+document validation. Both follow the same discipline — OCR *reads*, code *decides* —
+so every approval or rejection is deterministic and explainable, never an AI guess.
+Built as an operations-AI proof of concept during the Exology Pioneer Program. Full
+engineering handoff: [`docs/engineering-handoff.md`](docs/engineering-handoff.md).
 
 ## 1 · The business problems
 
@@ -40,6 +45,15 @@ image ──► Tesseract OCR (local, upscaled 2×)
 | Extraction | `invoice_extraction.py` | `extraction.py` (label regex + MRZ parser) |
 | Decisions | 3 arithmetic/presence checks | `rules_engine.py` (5 rules) |
 
+## Skills Demonstrated
+
+- **OCR pipeline engineering**: local Tesseract (2× upscaling for accuracy), no cloud vision API, no data leaving the machine — a deliberate privacy-first choice for a domain (pilgrim identity documents, vendor financials) where that actually matters.
+- **The "AI reads, code decides" pattern, applied consistently**: probabilistic OCR output never makes a final call — every approve/reject/route-to-human decision is a plain, testable, auditable code path (3 arithmetic/presence checks for invoices, 5 explicit rules for onboarding).
+- **Real-world extraction robustness, not just happy-path parsing**: a dual extraction strategy (label-regex first, ICAO Doc 9303 Machine Readable Zone as fallback) because label-based parsing — which works fine on clean synthetic samples — breaks on real passports with non-English labels. Verified against an actual bilingual passport image, including handling MRZ-specific OCR noise (`<` padding, O↔0 confusion in country codes).
+- **Stateful multi-document workflows**: server-side sessions let the onboarding demo validate a passport/visa/health-certificate/booking set together (cross-document identity consistency, visa-vs-booking package matching) rather than scoring documents in isolation.
+- **Honest engineering communication**: the invoice demo's README states its real limitation (regex-based, fixed-column extraction won't generalize to arbitrary vendor layouts) instead of glossing over it — the kind of tradeoff disclosure that matters in a production handoff.
+- **Deployment-ready packaging**: Dockerized, `$PORT`-aware, deployable as-is to Railway/Render/Fly.io with zero API keys required.
+
 ## Run & deploy
 
 Each demo needs [Tesseract](https://github.com/tesseract-ocr/tesseract) (`sudo apt install tesseract-ocr`) and Python 3.10+:
@@ -50,6 +64,8 @@ cd pilgrim_onboarding_demo && pip install -r requirements.txt && uvicorn server:
 # or from repo root: ./run.sh invoice | ./run.sh onboarding
 ```
 
+Windows setup + a full scripted demo walkthrough: [`HOW_TO_RUN.md`](HOW_TO_RUN.md) / [`RUN_COMMANDS.txt`](RUN_COMMANDS.txt).
+
 Docker (Tesseract included in the image):
 
 ```bash
@@ -59,6 +75,6 @@ cd pilgrim_onboarding_demo && docker build -t hospitality-onboarding . && docker
 
 No API keys needed — fully self-contained and offline-safe by design. Deployable as-is to Railway / Render / Fly.io (respects `$PORT`).
 
-## Skills demonstrated
+## Screenshots
 
-OCR pipelines · information/extraction engineering · deterministic decision systems over probabilistic AI · privacy-first architecture · MRZ parsing (ICAO Doc 9303) · client-facing demo craft · operational planning under calendar uncertainty.
+*(Screenshots coming soon)*
