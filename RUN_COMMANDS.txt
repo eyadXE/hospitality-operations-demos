@@ -1,0 +1,23 @@
+# hospitality-operations-demos — copy/paste run commands (PowerShell)
+# Two independent demos. Run each in its own terminal, both cd'd into this project folder first.
+
+# ===== ONE-TIME SETUP (run once, then open a NEW terminal for the steps below) =====
+winget install --id UB-Mannheim.TesseractOCR -e
+setx PATH "%PATH%;C:\Program Files\Tesseract-OCR"
+# You must open a fresh terminal after this for PATH to take effect.
+
+# ===== TERMINAL 1 — Invoice Extraction Agent =====
+cd invoice_extraction_demo
+python -m venv .venv
+.venv\Scripts\pip install -r requirements.txt
+.venv\Scripts\uvicorn server:app --host 127.0.0.1 --port 8000
+# Open: http://127.0.0.1:8000
+
+# ===== TERMINAL 2 — Pilgrim Onboarding Agent (new terminal, cd into project root again) =====
+cd pilgrim_onboarding_demo
+python -m venv .venv
+.venv\Scripts\pip install -r requirements.txt
+.venv\Scripts\uvicorn server:app --host 127.0.0.1 --port 8001
+# Open: http://127.0.0.1:8001
+
+# No API keys needed — everything runs locally (OCR + rules engine).
